@@ -21,13 +21,13 @@ for APP in $APPS; do
         fi
 	echo "START PROCESSING APPLICATION ${APP}"
 
-	MANIFEST_FILE="${APP_DIR_NAME}/${APP}/propel-${ENVIRONMENT}.yaml"
-	if [ ! -f ${MANIFEST_FILE} ]; then
+	PROPEL_CONFIG_FILE="${APP_DIR_NAME}/${APP}/propel-${ENVIRONMENT}.yaml"
+	if [ ! -f ${PROPEL_CONFIG_FILE} ]; then
 	    echo "Application manifest file not found!"
 	    exit 1
 	fi
 
-	ENV_NAME=$(/usr/local/bin/yq r $MANIFEST_FILE "environment.name")
+	ENV_NAME=$(/usr/local/bin/yq r $PROPEL_CONFIG_FILE "environment.name")
 
 	ENV_NAME_UPPERCASE=$(echo $ENV_NAME | awk '{print toupper($0)}')
 	AWS_ACCESS_KEY_ID_VAR_NAME=CLOUDFORMATION_${ENV_NAME_UPPERCASE}_AWS_ACCESS_KEY_ID
@@ -57,7 +57,7 @@ for APP in $APPS; do
 
 	cd ${APP_DIR_NAME}/${APP}
 	RELEASE_DESCRIPTION="CircleCI build URL: ${CIRCLE_BUILD_URL}"
-	propel release create --deploy --descr "${RELEASE_DESCRIPTION}"
+	propel release create --deploy --descr "${RELEASE_DESCRIPTION}" -f ${PROPEL_CONFIG_FILE}
 	echo "END PROCESSING APPLICATION ${APP}"
 	
 	cd -
