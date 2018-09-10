@@ -11,19 +11,19 @@ if [ -z "${AWS_REGION}" ]; then
 fi
 
 ENVIRONMENT=staging
-APP_DIR_NAME=devops/aws/app
-APPS=$(ls ${APP_DIR_NAME})
+SERVICE_DIR_NAME=devops/aws/services
+SERVICES=$(ls ${SERVICE_DIR_NAME})
 
-for APP in $APPS; do
-        DISABLED=$(echo $APP | grep disabled)
-        if [ "${DISABLED}" == "${APP}" ]; then
+for SERVICE in $SERVICES; do
+        DISABLED=$(echo $SERVICE | grep disabled)
+        if [ "${DISABLED}" == "${SERVICE}" ]; then
             continue
         fi
-	echo "START PROCESSING APPLICATION ${APP}"
+	echo "START PROCESSING SERVICE ${SERVICE}"
 
-	PROPEL_CONFIG_FILE="${APP_DIR_NAME}/${APP}/propel-${ENVIRONMENT}.yaml"
+	PROPEL_CONFIG_FILE="${SERVICE_DIR_NAME}/${SERVICE}/propel-${ENVIRONMENT}.yaml"
 	if [ ! -f ${PROPEL_CONFIG_FILE} ]; then
-	    echo "Application manifest file not found!"
+	    echo "Propel configuration file not found!"
 	    exit 1
 	fi
 
@@ -55,10 +55,10 @@ for APP in $APPS; do
 	sudo mv propel /usr/local/bin/propel
 	sudo chmod +x /usr/local/bin/propel
 
-	cd ${APP_DIR_NAME}/${APP}
+	cd ${SERVICE_DIR_NAME}/${SERVICE}
 	RELEASE_DESCRIPTION="CircleCI build URL: ${CIRCLE_BUILD_URL}"
 	propel release create --deploy --descr "${RELEASE_DESCRIPTION}" -f ${PROPEL_CONFIG_FILE}
-	echo "END PROCESSING APPLICATION ${APP}"
+	echo "END PROCESSING SERVICE ${SERVICE}"
 	
 	cd -
 done
