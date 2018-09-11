@@ -21,7 +21,9 @@ for SERVICE in $SERVICES; do
         fi
 	echo "START PROCESSING SERVICE ${SERVICE}"
 
-	PROPEL_CONFIG_FILE="${SERVICE_DIR_NAME}/${SERVICE}/propel-${ENVIRONMENT}.yaml"
+	cd ${SERVICE_DIR_NAME}/${SERVICE}
+
+	PROPEL_CONFIG_FILE="propel-${ENVIRONMENT}.yaml"
 	if [ ! -f ${PROPEL_CONFIG_FILE} ]; then
 	    echo "Propel configuration file not found!"
 	    exit 1
@@ -53,8 +55,6 @@ for SERVICE in $SERVICES; do
 	sudo mv propel /usr/local/bin/propel
 	sudo chmod +x /usr/local/bin/propel
 
-	cd ${SERVICE_DIR_NAME}/${SERVICE}
-        ls -la
 	RELEASE_DESCRIPTION="CircleCI build URL: ${CIRCLE_BUILD_URL}"
         CMD="propel release create --deploy --descr \"${RELEASE_DESCRIPTION}\" -f ${PROPEL_CONFIG_FILE}"
         echo Running $CMD
