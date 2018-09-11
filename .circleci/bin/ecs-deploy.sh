@@ -56,9 +56,7 @@ for SERVICE in $SERVICES; do
 	sudo chmod +x /usr/local/bin/propel
 
 	RELEASE_DESCRIPTION="CircleCI build URL: ${CIRCLE_BUILD_URL}"
-        CMD="propel release create --deploy --descr \"${RELEASE_DESCRIPTION}\" -f ${PROPEL_CONFIG_FILE}"
-        echo Running $CMD
-        $CMD
+        propel release create --deploy --descr "${RELEASE_DESCRIPTION}" -f ${PROPEL_CONFIG_FILE}
 	
 	echo "END PROCESSING SERVICE ${SERVICE}"
 	
