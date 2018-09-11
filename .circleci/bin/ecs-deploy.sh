@@ -56,8 +56,10 @@ for SERVICE in $SERVICES; do
 	cd ${SERVICE_DIR_NAME}/${SERVICE}
         ls -la
 	RELEASE_DESCRIPTION="CircleCI build URL: ${CIRCLE_BUILD_URL}"
-        echo Running propel release create --deploy --descr "${RELEASE_DESCRIPTION}" -f ${PROPEL_CONFIG_FILE}
-	propel release create --deploy --descr "${RELEASE_DESCRIPTION}" -f ${PROPEL_CONFIG_FILE}
+        CMD=propel release create --deploy --descr "${RELEASE_DESCRIPTION}" -f ${PROPEL_CONFIG_FILE}
+        echo Running $CMD
+        $CMD
+	
 	echo "END PROCESSING SERVICE ${SERVICE}"
 	
 	cd -
